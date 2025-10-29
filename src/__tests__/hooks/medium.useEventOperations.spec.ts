@@ -171,3 +171,169 @@ it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되�
 
   expect(result.current.events).toHaveLength(1);
 });
+
+describe('REQ-001: 반복 유형 선택 - Data Persistence', () => {
+  describe('Phase 4: Data Persistence Verification', () => {
+    describe('Group 4.1: Save and Retrieve', () => {
+      it('"매일" 반복으로 저장된 일정 조회 시 repeat.type이 "daily"다', async () => {
+        // 명세: REQ-001 - 매일 반복 데이터 저장
+        // 설계: TODO-015
+
+        // Arrange
+        setupMockHandlerCreation();
+        const { result } = renderHook(() => useEventOperations(false));
+
+        await act(() => Promise.resolve(null));
+
+        const dailyEvent: Event = {
+          id: '1',
+          title: '매일 운동',
+          date: '2025-01-01',
+          startTime: '07:00',
+          endTime: '08:00',
+          description: '아침 운동',
+          location: '헬스장',
+          category: '개인',
+          repeat: { type: 'daily', interval: 1 },
+          notificationTime: 10,
+        };
+
+        // Act
+        await act(async () => {
+          await result.current.saveEvent(dailyEvent);
+        });
+
+        // Assert
+        expect(result.current.events[0].repeat.type).toBe('daily');
+      });
+
+      it('"매주" 반복으로 저장된 일정 조회 시 repeat.type이 "weekly"다', async () => {
+        // 명세: REQ-001 - 매주 반복 데이터 저장
+        // 설계: TODO-016
+
+        // Arrange
+        setupMockHandlerCreation();
+        const { result } = renderHook(() => useEventOperations(false));
+
+        await act(() => Promise.resolve(null));
+
+        const weeklyEvent: Event = {
+          id: '1',
+          title: '주간 회의',
+          date: '2025-01-06',
+          startTime: '14:00',
+          endTime: '15:00',
+          description: '팀 주간 회의',
+          location: '회의실 B',
+          category: '업무',
+          repeat: { type: 'weekly', interval: 1 },
+          notificationTime: 10,
+        };
+
+        // Act
+        await act(async () => {
+          await result.current.saveEvent(weeklyEvent);
+        });
+
+        // Assert
+        expect(result.current.events[0].repeat.type).toBe('weekly');
+      });
+
+      it('"매월" 반복으로 저장된 일정 조회 시 repeat.type이 "monthly"다', async () => {
+        // 명세: REQ-001 - 매월 반복 데이터 저장
+        // 설계: TODO-017
+
+        // Arrange
+        setupMockHandlerCreation();
+        const { result } = renderHook(() => useEventOperations(false));
+
+        await act(() => Promise.resolve(null));
+
+        const monthlyEvent: Event = {
+          id: '1',
+          title: '월간 리뷰',
+          date: '2025-01-15',
+          startTime: '10:00',
+          endTime: '11:00',
+          description: '월간 성과 리뷰',
+          location: '대회의실',
+          category: '업무',
+          repeat: { type: 'monthly', interval: 1 },
+          notificationTime: 10,
+        };
+
+        // Act
+        await act(async () => {
+          await result.current.saveEvent(monthlyEvent);
+        });
+
+        // Assert
+        expect(result.current.events[0].repeat.type).toBe('monthly');
+      });
+
+      it('"매년" 반복으로 저장된 일정 조회 시 repeat.type이 "yearly"다', async () => {
+        // 명세: REQ-001 - 매년 반복 데이터 저장
+        // 설계: TODO-018
+
+        // Arrange
+        setupMockHandlerCreation();
+        const { result } = renderHook(() => useEventOperations(false));
+
+        await act(() => Promise.resolve(null));
+
+        const yearlyEvent: Event = {
+          id: '1',
+          title: '생일',
+          date: '2025-03-15',
+          startTime: '00:00',
+          endTime: '23:59',
+          description: '내 생일',
+          location: '',
+          category: '개인',
+          repeat: { type: 'yearly', interval: 1 },
+          notificationTime: 1440,
+        };
+
+        // Act
+        await act(async () => {
+          await result.current.saveEvent(yearlyEvent);
+        });
+
+        // Assert
+        expect(result.current.events[0].repeat.type).toBe('yearly');
+      });
+
+      it('비반복으로 저장된 일정 조회 시 repeat.type이 "none"이다', async () => {
+        // 명세: REQ-001 - 비반복 데이터 저장
+        // 설계: TODO-019
+
+        // Arrange
+        setupMockHandlerCreation();
+        const { result } = renderHook(() => useEventOperations(false));
+
+        await act(() => Promise.resolve(null));
+
+        const nonRecurringEvent: Event = {
+          id: '1',
+          title: '회의',
+          date: '2025-01-15',
+          startTime: '09:00',
+          endTime: '10:00',
+          description: '팀 미팅',
+          location: '회의실 A',
+          category: '업무',
+          repeat: { type: 'none', interval: 0 },
+          notificationTime: 10,
+        };
+
+        // Act
+        await act(async () => {
+          await result.current.saveEvent(nonRecurringEvent);
+        });
+
+        // Assert
+        expect(result.current.events[0].repeat.type).toBe('none');
+      });
+    });
+  });
+});
