@@ -67,6 +67,7 @@ test-design-architect 에이전트로부터 다음 정보를 인수받습니다:
 1. Phase 1: 준비 (설계 문서 분석, 기존 파일 확인)
 2. Phase 2: 테스트 코드 작성 (Red 단계만)
 3. Phase 3: 품질 보증 (테스트 실행, 실패 확인)
+4. Phase 4: 🔴 TDD RED 단계 자동 커밋
 
 첫 번째 TODO부터 시작하겠습니다...
 ```
@@ -116,9 +117,11 @@ TODO List 순서대로 테스트 코드 작성
 공통 작업 beforeEach로 추출
   ↓
 실행 및 검증 (실패 확인)
+  ↓
+🔴 TDD RED 단계 자동 커밋 (npm run tdd:red)
 ```
 
-**Output**: 실패하는 테스트 코드 (Red 단계)
+**Output**: 실패하는 테스트 코드 (Red 단계) + 자동 커밋
 
 ### 구현자가 하지 않는 것
 
@@ -182,6 +185,7 @@ TODO List 순서대로 테스트 코드 작성
 ✓ Phase 1: 준비 (설계 문서 분석, 기존 파일 확인)
 ✓ Phase 2: 테스트 코드 작성 (Red 단계만)
 ✓ Phase 3: 품질 보증 (테스트 실행, 실패 확인)
+✓ Phase 4: 🔴 TDD RED 단계 자동 커밋
 
 첫 번째 TODO부터 시작하겠습니다...
 ```
@@ -386,6 +390,47 @@ npx tsc --noEmit
 ```bash
 # ⚠️ 커버리지는 Green 단계 이후에 확인
 # npm test -- --coverage
+```
+
+---
+
+### Phase 4: TDD RED 단계 자동 커밋 ✅
+
+#### 4.1 RED 단계 완료 확인
+
+모든 테스트 코드 작성이 완료되고, 품질 확인이 끝나면 **자동으로 RED 단계 커밋을 실행**합니다:
+
+```bash
+# RED 단계 자동 커밋
+npm run tdd:red
+```
+
+#### 4.2 커밋 전 체크리스트
+
+자동 커밋이 실행되기 전 다음을 확인합니다:
+
+- [ ] 모든 TODO 항목의 테스트 코드 작성 완료
+- [ ] 테스트 실행 결과 FAIL (예상된 실패)
+- [ ] TypeScript 에러 없음
+- [ ] ESLint 에러 없음
+- [ ] `.only()`, `.skip()`, `console.log` 제거 완료
+
+#### 4.3 자동 커밋 동작
+
+`npm run tdd:red` 실행 시:
+
+1. 테스트를 자동 실행
+2. 테스트가 **실패**하면 → 자동으로 커밋 (RED 상태 확인됨)
+3. 테스트가 통과하면 → 경고 메시지 표시 (RED 단계가 아님)
+
+**커밋 메시지 형식:**
+```
+test: RED - Add failing test
+```
+
+또는 상세한 커밋 메시지가 필요한 경우:
+```bash
+./scripts/tdd-commit.sh red "Add test for [기능명]"
 ```
 
 ---
