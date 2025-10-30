@@ -48,20 +48,31 @@
 ┌─────────────────┐
 │ test-code-      │ → 실패하는 테스트 코드 작성
 │ implementer     │   src/__tests__/**/*.spec.{ts,tsx}
-│ (RED 단계)      │
+│ (RED 단계)      │   + 🔴 자동 커밋 (npm run tdd:red)
 └─────────────────┘
         ↓
 ┌─────────────────┐
 │ test-driven-    │ → 프로덕션 코드 구현
 │ developer       │   src/utils/**, src/hooks/**, etc.
-│ (GREEN 단계)    │
+│ (GREEN 단계)    │   + 🟢 자동 커밋 (npm run tdd:green)
 └─────────────────┘
         ↓
 ┌─────────────────┐
-│ (향후 추가)     │ → 리팩토링
-│ REFACTOR 단계   │
+│ test-driven-    │ → 리팩토링 (선택사항)
+│ developer       │   코드 품질 개선
+│ (REFACTOR 단계) │   + 🔵 자동 커밋 (npm run tdd:refactor)
 └─────────────────┘
 ```
+
+### TDD 자동 커밋 워크플로우
+
+각 에이전트는 작업 완료 시 자동으로 해당 TDD 단계의 커밋을 실행합니다:
+
+- **RED 단계**: `test-code-implementer`가 테스트 코드 작성 완료 후 자동 커밋
+- **GREEN 단계**: `test-driven-developer`가 구현 완료 후 자동 커밋
+- **REFACTOR 단계**: `test-driven-developer`가 리팩토링 완료 후 자동 커밋
+
+상세 내용은 [TDD 워크플로우 가이드](../../docs/tdd-workflow-guide.md)를 참조하세요.
 
 ### 각 단계의 전달 정보
 
