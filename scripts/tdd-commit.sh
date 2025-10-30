@@ -25,9 +25,9 @@ case $STAGE in
       
       # 커밋 메시지 생성
       if [ -z "$CUSTOM_MESSAGE" ]; then
-        COMMIT_MESSAGE="test: RED - Add failing test"
+        COMMIT_MESSAGE="test: 🔴 RED - Add failing test"
       else
-        COMMIT_MESSAGE="test: RED - $CUSTOM_MESSAGE"
+        COMMIT_MESSAGE="test: 🔴 RED - $CUSTOM_MESSAGE"
       fi
       
       # 변경사항 스테이징 및 커밋
@@ -49,9 +49,9 @@ case $STAGE in
       
       # 커밋 메시지 생성
       if [ -z "$CUSTOM_MESSAGE" ]; then
-        COMMIT_MESSAGE="feat: GREEN - Implement feature to pass tests"
+        COMMIT_MESSAGE="feat: 🟢 GREEN - Implement feature to pass tests"
       else
-        COMMIT_MESSAGE="feat: GREEN - $CUSTOM_MESSAGE"
+        COMMIT_MESSAGE="feat: 🟢 GREEN - $CUSTOM_MESSAGE"
       fi
       
       # 변경사항 스테이징 및 커밋

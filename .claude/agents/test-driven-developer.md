@@ -309,7 +309,7 @@ npm run tdd:green
 
 **커밋 메시지 형식:**
 ```
-feat: GREEN - Implement feature to pass tests
+feat: 🟢 GREEN - Implement feature to pass tests
 ```
 
 또는 상세한 커밋 메시지가 필요한 경우:
@@ -345,6 +345,9 @@ GREEN 단계에서 프로덕션 코드를 작성할 때 따라야 할 4가지 �
    - 의미 있는 변수명 사용
    - 복잡한 로직을 함수로 분리
    - 코드만 봐도 의도가 명확해야 함
+   
+5. **테스트 코드 절대 수정 금지**
+   - 테스트 코드는 절대 수정하지 않아야함
 
 **⚠️ 상세 예시 및 적용 방법**: [test-driven-developer-principles.md](../../docs/reference/test-driven-developer-principles.md) 참조
 
