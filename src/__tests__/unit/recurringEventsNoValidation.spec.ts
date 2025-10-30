@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { generateRecurringEvents } from '../../utils/eventUtils';
 import { EventForm } from '../../types';
+import { generateRecurringEvents } from '../../utils/eventUtils';
 
 describe('REQ-004: 중복 검증 없음', () => {
   describe('TODO-004: 동일한 제목, 시간의 단일 일정을 여러 개 생성할 수 있다', () => {
@@ -58,9 +58,7 @@ describe('REQ-004: 중복 검증 없음', () => {
       };
 
       // Act - 5번 생성 시도
-      const results = Array.from({ length: 5 }, () =>
-        generateRecurringEvents(duplicateEvent)
-      );
+      const results = Array.from({ length: 5 }, () => generateRecurringEvents(duplicateEvent));
 
       // Assert - 모두 정상 생성됨
       expect(results).toHaveLength(5);
@@ -247,9 +245,7 @@ describe('REQ-004: 중복 검증 없음', () => {
       };
 
       // Act - 10번 생성 시도
-      const results = Array.from({ length: 10 }, () =>
-        generateRecurringEvents(yearlyEvent)
-      );
+      const results = Array.from({ length: 10 }, () => generateRecurringEvents(yearlyEvent));
 
       // Assert - 모두 정상 생성됨 (각각 1개씩, 2025년만)
       expect(results).toHaveLength(10);
@@ -260,4 +256,3 @@ describe('REQ-004: 중복 검증 없음', () => {
     });
   });
 });
-

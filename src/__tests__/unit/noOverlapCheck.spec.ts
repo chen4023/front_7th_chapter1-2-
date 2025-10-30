@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { generateRecurringEvents } from '../../utils/eventUtils';
 import { EventForm } from '../../types';
+import { generateRecurringEvents } from '../../utils/eventUtils';
 
 describe('REQ-004: 반복 일정 겹침 미고려', () => {
   describe('TODO-001: 반복 일정 생성 시 겹침 검증을 수행하지 않는다', () => {
@@ -143,4 +143,3 @@ describe('REQ-004: 반복 일정 겹침 미고려', () => {
     });
   });
 });
-
