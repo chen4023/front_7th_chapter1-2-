@@ -114,8 +114,6 @@ Validation (간단한 검증)
   ↓
 Boundary (경계값)
   ↓
-Edge Cases (특수 케이스)
-  ↓
 Error Handling
 ```
 

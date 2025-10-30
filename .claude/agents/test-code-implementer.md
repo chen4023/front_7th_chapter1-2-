@@ -127,6 +127,7 @@ TODO List 순서대로 테스트 코드 작성
 
 ```
 ❌ 새로운 테스트 케이스 추가
+❌ 이미 구현된 테스트 코드 중복 작성 (⚠️ 중요!)
 ❌ 설계 문서에 없는 내용 테스트
 ❌ 명세 외 요구사항 추가
 ❌ 과도한 모킹
@@ -140,6 +141,7 @@ TODO List 순서대로 테스트 코드 작성
 | 금지 사항                   | 이유                        | 대안               |
 | --------------------------- | --------------------------- | ------------------ |
 | **유틸 함수/컴포넌트 구현** | 테스트 코드만 작성하는 역할 | 개발자가 직접 구현 |
+| **이미 구현된 테스트 중복 작성** | 불필요한 중복, 설계 낭비 | 기존 테스트 확인 후 it.todo()만 구현 |
 | 새로운 테스트 케이스 추가   | 설계 문서 위반              | 설계자에게 요청    |
 | `querySelector` 사용        | 접근성 무시, 구현 의존      | getByRole 사용     |
 | `setTimeout` 사용           | 불안정한 테스트             | waitFor, findBy    |
@@ -167,6 +169,9 @@ TODO List 순서대로 테스트 코드 작성
    - TODO List 존재 확인
    - Coverage Map 100% 확인
    - 명세 참조 ID 존재 확인
+4. ⚠️ 기존 테스트 파일 확인:
+   - 이미 구현된 테스트 케이스 확인 (중복 방지)
+   - it.todo() 또는 빈 it() 블록만 구현 대상으로 식별
 ```
 
 #### 0.2 사용자에게 시작 알림
@@ -222,7 +227,7 @@ interface TestDesign {
 - 예상 시간 확인
 ```
 
-#### 1.2 기존 테스트 파일 확인
+#### 1.2 기존 테스트 파일 확인 ⚠️ 중복 방지 필수
 
 ```typescript
 // 파일 존재 여부 확인
@@ -232,8 +237,35 @@ const testFiles = [
   'src/__tests__/integration.spec.tsx',
 ];
 
-// 각 파일에서 기존 테스트 케이스 확인
-// it.todo() 또는 빈 it() 블록 찾기
+// ⚠️ 각 파일에서 기존 테스트 케이스 확인 (중복 작성 방지!)
+// 1. it.todo() → 구현 대상
+// 2. it('...', () => { ... }) 이미 구현됨 → 건너뛰기!
+// 3. 빈 it() 블록 → 구현 대상
+```
+
+**중복 방지 체크:**
+
+```typescript
+// ✅ GOOD: it.todo()만 구현
+describe('Recurring Events', () => {
+  it('should create daily events', () => {
+    // 이미 구현됨 → 건너뛰기!
+  });
+  
+  it.todo('should create weekly events'); // ← 이것만 구현!
+});
+
+// ❌ BAD: 이미 구현된 테스트를 다시 작성
+describe('Recurring Events', () => {
+  it('should create daily events', () => {
+    // 이미 구현됨
+  });
+  
+  // 중복 작성! (절대 금지)
+  it('should create daily events for 7 days', () => {
+    // ...
+  });
+});
 ```
 
 #### 1.3 의존성 확인
@@ -305,51 +337,8 @@ it('should create daily events', () => {
 3. **최소 주석 해제**: Green 단계에서 Assert만 주석 해제하면 됨
 4. **실제 오류 확인**: 함수가 없어서 발생하는 실제 오류 메시지 확인 가능
 
-#### 2.2 공통 작업 추출 (3회 이상 반복 시)
 
-```typescript
-// BAD: 중복 코드
-it('test 1', async () => {
-  const user = userEvent.setup();
-  vi.setSystemTime(new Date('2025-10-01'));
-  render(<Component />);
-  // ...
-});
-
-it('test 2', async () => {
-  const user = userEvent.setup(); // 중복
-  vi.setSystemTime(new Date('2025-10-01')); // 중복
-  render(<Component />); // 중복
-  // ...
-});
-
-// GOOD: beforeEach로 추출
-describe('Component', () => {
-  let user: ReturnType<typeof userEvent.setup>;
-
-  beforeEach(() => {
-    user = userEvent.setup();
-    vi.setSystemTime(new Date('2025-10-01'));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-    vi.clearAllMocks();
-  });
-
-  it('test 1', async () => {
-    render(<Component />);
-    // user 재사용
-  });
-
-  it('test 2', async () => {
-    render(<Component />);
-    // user 재사용
-  });
-});
-```
-
-#### 2.3 AAA 패턴 준수
+#### 2.2 AAA 패턴 준수
 
 참고: [공통 기술 가이드 - AAA 패턴](./README.md#2-aaa-패턴-arrange-act-assert)
 
@@ -437,22 +426,52 @@ test: RED - Add failing test
 
 ## 구현 규칙
 
-### Rule 1: 기존 테스트 케이스만 구현
+### Rule 1: 기존 테스트 케이스만 구현 ⚠️ 중복 절대 금지
+
+**작업 전 필수 확인:**
+1. 설계 문서의 TODO 목록 확인
+2. **기존 테스트 파일에서 이미 구현된 테스트 확인((__test__))**
+3. `it.todo()` 또는 빈 `it()` 블록만 구현
 
 ```typescript
-// ✅ GOOD: 기존 it.todo() 구현
+// ✅ GOOD: it.todo() → 구현
 it.todo('should create daily recurring events');
-// → 구현 추가
-
+// ↓ 구현 추가
 it('should create daily recurring events', async () => {
   // 구현
+});
+
+// ✅ GOOD: 이미 구현된 테스트는 건너뛰기
+describe('Recurring Events', () => {
+  it('should create daily events', () => {
+    // ✓ 이미 구현됨 → 건너뛰고 다음 TODO로
+  });
+  
+  it.todo('should create weekly events'); // ← 이것만 구현
 });
 
 // ❌ BAD: 새로운 테스트 추가
 it('should validate title length', async () => {
   // 설계 문서에 없는 테스트!
 });
+
+// ❌ BAD: 이미 구현된 테스트 중복 작성
+describe('Recurring Events', () => {
+  it('should create daily events', () => {
+    // 이미 구현됨
+  });
+  
+  // ❌ 중복! (유사한 테스트를 다시 작성)
+  it('should generate daily recurring events', () => {
+    // 같은 내용을 다시 테스트
+  });
+});
 ```
+
+**⚠️ 중복 방지 체크리스트:**
+- [ ] 설계 문서의 TODO ID가 기존 파일에 이미 생성되어 있는 파일에 구현되어 있지 않은가?
+- [ ] 비슷한 describe/it 블록이 이미 존재하지 않는가?
+- [ ] 같은 기능을 테스트하는 다른 테스트가 있지 않은가?
 
 ### Rule 2: 명세 참조 ID 주석 추가
 
@@ -545,72 +564,5 @@ it('should create event on fixed date', async () => {
 ## Kent Beck TDD 원칙 적용
 - [Kent Beck TDD Philosophy](../../docs/kent-beck-tdd-philosophy.md) - TODO List 작성 방법론
 
-## 품질 체크리스트
-
-### 구현 완료 전 확인
-
-#### 기본 규칙
-
-- [ ] 설계 문서의 TODO만 구현 (새 테스트 추가 안 함)
-- [ ] 각 테스트에 명세 ID 주석 추가 (// 명세: RT-001)
-- [ ] AAA 패턴 준수 (Arrange-Act-Assert)
-- [ ] 비동기 테스트에 `expect.hasAssertions()` 포함
-
-#### 공통 작업 관리
-
-- [ ] 3회 이상 반복되는 코드를 `beforeEach`로 추출
-- [ ] `afterEach`에서 cleanup (vi.clearAllMocks, vi.useRealTimers)
-- [ ] 테스트 간 독립성 확보 (순서 무관)
-
-#### 쿼리 및 Assertion
-
-- [ ] 쿼리 우선순위 준수 (getByRole > ... > getByTestId)
-- [ ] `querySelector`, `getElementById` 미사용
-- [ ] 명확한 matcher 사용 (toBeDisabled, toHaveValue 등)
-
-#### 모킹
-
-- [ ] 모킹 최소화 (실제 코드 사용)
-- [ ] API는 MSW Handler 사용 (vi.mock 안 함)
-- [ ] 시간 고정 (vi.setSystemTime)
-- [ ] Mock 데이터는 `__mocks__/response/` 활용
-
-#### 비동기 처리
-
-- [ ] `userEvent` 호출 시 `await` 사용
-- [ ] `findBy` 또는 `waitFor` 사용 (setTimeout 금지)
-- [ ] 불필요한 `act()` 래핑 안 함
-
-#### 코드 품질
-
-- [ ] 파일명/위치 규칙 준수
-- [ ] Import 순서 정리
-- [ ] `.only()`, `.skip()` 제거
-- [ ] `console.log` 디버깅 코드 제거
-- [ ] TypeScript 에러 없음
-- [ ] ESLint 에러 없음
-
-#### 테스트 실행 (Red 단계 확인)
-
-- [ ] 테스트 작성 완료 (npm test 실행 가능)
-- [ ] 예상대로 실패함 (FAIL - 구현 안 됨)
-- [ ] TypeScript/ESLint 에러 없음 (테스트 코드 자체는 오류 없어야 함)
-
-#### 구현 후 확인 (개발자가)
-
-- [ ] 모든 테스트 통과 (Green 단계)
-- [ ] Coverage 목표 달성
-- [ ] CI/CD 파이프라인 통과
-
----
-
-## 참고 문서
-
-공통 참고 문서는 [README.md의 공통 참고 문서 섹션](./README.md#공통-참고-문서)를 참조하세요.
-
-### RED 단계 전용 문서
-
-- [Test Design Document](../../reports/test-design-{feature}.md) - 구현할 설계 문서
-- [공통 가이드](./README.md) - 모든 에이전트 공통 가이드
 
 ---

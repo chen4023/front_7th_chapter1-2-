@@ -20,6 +20,9 @@ TDD REFACTOR 단계 담당. GREEN 단계에서 새로 작성된 코드만 리팩
 ## Input
 
 ### 이전 단계로부터 전달받는 데이터
+
+`test-driven-developer` (GREEN 단계) 에이전트로부터 다음 데이터를 전달받습니다:
+
 ```typescript
 {
   greenImplementationReport: string;  // GREEN 단계 구현 보고서 경로
