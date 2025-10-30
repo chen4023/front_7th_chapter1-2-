@@ -9,9 +9,9 @@ import { Event } from '../../types';
 
 /**
  * REQ-005: 반복 일정 시각적 표시
- * 
- * 테스트 범위: Integration Tests - Views (TODO-009 ~ TODO-011)
- * - Phase 3: 캘린더 뷰별 검증 (월간/주간/일간 뷰)
+ *
+ * 테스트 범위: Integration Tests - Views (TODO-007 ~ TODO-008)
+ * - Phase 3: 캘린더 뷰별 검증 (월간/주간 뷰)
  */
 
 // notistack mock
@@ -72,9 +72,9 @@ describe('REQ-005: 반복 일정 시각적 표시 - Integration Tests (Views)', 
   });
 
   describe('Phase 3: 캘린더 뷰별 검증', () => {
-    it('TODO-009: 월간 뷰에서 반복 일정 아이콘이 표시된다', async () => {
+    it('TODO-007: 월간 뷰에서 반복 일정 아이콘이 표시된다', async () => {
       // 명세: REQ-005
-      // 설계: TODO-009
+      // 설계: TODO-007
       expect.hasAssertions();
 
       // Arrange - Mock 데이터 설정
@@ -107,9 +107,9 @@ describe('REQ-005: 반복 일정 시각적 표시 - Integration Tests (Views)', 
       // expect(within(monthView).getByText(/매일 운동/)).toBeInTheDocument();
     });
 
-    it('TODO-010: 주간 뷰에서 반복 일정 아이콘이 표시된다', async () => {
+    it('TODO-008: 주간 뷰에서 반복 일정 아이콘이 표시된다', async () => {
       // 명세: REQ-005
-      // 설계: TODO-010
+      // 설계: TODO-008
       expect.hasAssertions();
 
       // Arrange - Mock 데이터 설정
@@ -142,37 +142,6 @@ describe('REQ-005: 반복 일정 시각적 표시 - Integration Tests (Views)', 
       // expect(within(weekView).getByText(/매일 운동/)).toBeInTheDocument();
     });
 
-    it('TODO-011: 일간 뷰에서 반복 일정 아이콘이 표시된다', async () => {
-      // 명세: REQ-005
-      // 설계: TODO-011
-      expect.hasAssertions();
-
-      // Arrange - Mock 데이터 설정
-      server.use(
-        http.get('/api/events', () => {
-          return HttpResponse.json({
-            events: [dailyRecurringEvent, nonRecurringEvent],
-          });
-        })
-      );
-
-      // Act - 앱 렌더링
-      render(<App />);
-
-      // 일간 뷰로 전환 (현재 구현되지 않음 - 미래 기능)
-      // Note: 현재 App.tsx에는 일간 뷰가 없으므로 이 테스트는 미래 구현을 위한 것
-
-      // Assert - 주석 처리
-      // await waitFor(() => {
-      //   const dayView = screen.getByTestId('day-view');
-      //   expect(dayView).toBeInTheDocument();
-      // });
-
-      // const dayView = screen.getByTestId('day-view');
-      // const recurringIcon = within(dayView).getByLabelText('반복 일정');
-      // expect(recurringIcon).toBeInTheDocument();
-      // expect(within(dayView).getByText(/매일 운동/)).toBeInTheDocument();
-    });
   });
 });
 

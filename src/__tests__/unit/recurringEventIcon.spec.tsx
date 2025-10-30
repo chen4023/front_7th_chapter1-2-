@@ -6,10 +6,11 @@ import { Event } from '../../types';
 
 /**
  * REQ-005: 반복 일정 시각적 표시
- * 
+ *
  * 테스트 범위: Unit Tests (TODO-001 ~ TODO-008)
- * - Phase 1: Happy Path (반복 유형별 아이콘 표시)
- * - Phase 2: UI 위치 및 스타일 검증
+ * - Phase 1: Happy Path (반복 유형별 아이콘 표시) - TODO-001 ~ TODO-005
+ * - Phase 2: 접근성 검증 - TODO-006
+ * - Phase 3: 종료일 검증 - TODO-008
  */
 
 describe('REQ-005: 반복 일정 시각적 표시 - Unit Tests', () => {
@@ -159,8 +160,8 @@ describe('REQ-005: 반복 일정 시각적 표시 - Unit Tests', () => {
     });
   });
 
-  describe('Phase 2: UI 위치 및 스타일 검증', () => {
-    it('TODO-006: 반복 아이콘은 일정 제목 바로 옆에 표시된다', async () => {
+  describe('Phase 2: 접근성 및 종료 조건', () => {
+    it('TODO-006: 반복 아이콘은 ARIA 레이블을 가진다', async () => {
       // 명세: REQ-005
       // 설계: TODO-006
       expect.hasAssertions();
@@ -171,46 +172,49 @@ describe('REQ-005: 반복 일정 시각적 표시 - Unit Tests', () => {
 
       // Assert - 주석 처리
       // const eventList = screen.getByTestId('event-list');
-      // const titleStack = within(eventList).getByText(/매일 운동/).closest('div');
-      // const icon = within(titleStack!).getByLabelText('반복 일정');
-      // expect(icon).toBeInTheDocument();
-      // // 제목과 아이콘이 같은 Stack에 있는지 확인
-      // expect(titleStack?.querySelector('[aria-label="반복 일정"]')).toBeTruthy();
+
+      // 접근성: ARIA 레이블 검증
+      // const recurringIcon = within(eventList).getByLabelText('반복 일정');
+      // expect(recurringIcon).toBeInTheDocument();
+      // expect(recurringIcon).toHaveAttribute('aria-label', '반복 일정');
     });
+  });
 
-    it('TODO-007: 반복 아이콘은 일정 제목과 함께 한 줄에 표시된다', async () => {
-      // 명세: REQ-005
-      // 설계: TODO-007
-      expect.hasAssertions();
-
-      // Arrange
-      // Act - 구현되지 않은 기능 (Red 단계)
-      render(<App />);
-
-      // Assert - 주석 처리
-      // const eventList = screen.getByTestId('event-list');
-      // const titleElement = within(eventList).getByText(/매일 운동/);
-      // const parentStack = titleElement.closest('div[style*="flex-direction: row"]');
-      // expect(parentStack).toBeInTheDocument();
-      // // Stack direction="row"로 가로 배치 확인
-      // expect(parentStack?.style.flexDirection).toBe('row');
-    });
-
-    it('TODO-008: 여러 반복 일정이 있을 때 각각 아이콘이 표시된다', async () => {
+  describe('Phase 3: 종료일 검증', () => {
+    it('TODO-008: 반복 종료일(endDate)이 지난 일정은 반복 아이콘을 표시하지 않는다', async () => {
       // 명세: REQ-005
       // 설계: TODO-008
       expect.hasAssertions();
 
-      // Arrange
+      // Arrange - 종료일이 지난 반복 일정
+      const expiredRecurringEvent: Event = {
+        id: '6',
+        title: '종료된 반복 일정',
+        date: '2025-06-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '이미 종료된 반복 일정',
+        location: '회의실',
+        category: '업무',
+        repeat: { type: 'daily', interval: 1, endDate: '2025-06-01' }, // 현재(2025-06-15)보다 과거
+        notificationTime: 10,
+      };
+
       // Act - 구현되지 않은 기능 (Red 단계)
       render(<App />);
 
       // Assert - 주석 처리
       // const eventList = screen.getByTestId('event-list');
-      // const icons = within(eventList).queryAllByLabelText('반복 일정');
-      // expect(icons.length).toBeGreaterThan(1);
-      // // 각 반복 일정마다 아이콘 존재 확인
-      // expect(icons.length).toBeGreaterThanOrEqual(4); // daily, weekly, monthly, yearly
+
+      // 활성 반복 일정(endDate='2025-12-31')은 아이콘 표시
+      // const activeRecurringEvents = within(eventList).getAllByLabelText('반복 일정');
+      // expect(activeRecurringEvents.length).toBeGreaterThan(0);
+
+      // 종료된 반복 일정은 아이콘 미표시
+      // const expiredEvent = within(eventList).getByText(/종료된 반복 일정/);
+      // expect(expiredEvent).toBeInTheDocument();
+      // const expiredEventContainer = expiredEvent.closest('div');
+      // expect(within(expiredEventContainer!).queryByLabelText('반복 일정')).not.toBeInTheDocument();
     });
   });
 });
