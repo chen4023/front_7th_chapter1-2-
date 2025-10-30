@@ -106,6 +106,14 @@ function App() {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  // 반복 일정 아이콘 표시 여부 확인 헬퍼 함수
+  const isActiveRecurring = (event: Event): boolean => {
+    if (event.repeat.type === 'none') return false;
+    if (!event.repeat.endDate) return true;
+    const today = new Date().toISOString().split('T')[0];
+    return event.repeat.endDate >= today;
+  };
+
   const addOrUpdateEvent = async () => {
     if (!title || !date || !startTime || !endTime) {
       enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
@@ -207,6 +215,9 @@ function App() {
                               >
                                 {event.title}
                               </Typography>
+                              {isActiveRecurring(event) && (
+                                <span aria-label="반복 일정">🔁</span>
+                              )}
                             </Stack>
                           </Box>
                         );
@@ -294,6 +305,9 @@ function App() {
                                     >
                                       {event.title}
                                     </Typography>
+                                    {isActiveRecurring(event) && (
+                                      <span aria-label="반복 일정">🔁</span>
+                                    )}
                                   </Stack>
                                 </Box>
                               );
@@ -546,6 +560,9 @@ function App() {
                       >
                         {event.title}
                       </Typography>
+                      {isActiveRecurring(event) && (
+                        <span aria-label="반복 일정">🔁</span>
+                      )}
                     </Stack>
                     <Typography>{event.date}</Typography>
                     <Typography>
