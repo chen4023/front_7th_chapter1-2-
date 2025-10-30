@@ -137,7 +137,5 @@ describe.skip('REQ-005: 반복 일정 시각적 표시 - Integration Tests (View
       expect(recurringIcon).toBeInTheDocument();
       expect(within(weekView).getByText(/매일 운동/)).toBeInTheDocument();
     });
-
   });
 });
-

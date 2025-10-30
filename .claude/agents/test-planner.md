@@ -146,20 +146,13 @@ Error Handling
   - `src/__tests__/hooks/useEventForm.spec.ts`
   - `src/__tests__/integration.spec.tsx`
 
-### 문서 구조 (Test Design Document)
-
-다음은 설계 완료 후 생성할 최종 보고서의 **전체 템플릿**입니다.
-템플릿에 맞추어 내용을 작성하세요.
-
-- [test-specific](../../docs/template/test-specific.md.)
-
 ---
 
 ## 최종 단계
 
 ### 1. Output 생성
 
-- [test-specific](../../docs/template/test-specific.md.) - 기능 명세 (요구사항, 제약사항)
+- [test-specific](../../docs/template/test-specific.md.) - 이 양식에 맞추어 보고서를 생성해주세요.
 
 ### 2. 승인 또는 수정
 
